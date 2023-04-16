@@ -22,9 +22,14 @@ export async function listCheckList() {
 }
 
 export async function createCheckList(checklists: ChecklistDTO[]) {
+    checklists.map((checklist: ChecklistDTO) => {
+        delete checklist.it_has_been_deleted
+    });
+
     try {
         await api.post('/checkList', { checklists: checklists });
     } catch (error: any) {
+        console.log(error)
         throw new Error(error.message);
     }
 }

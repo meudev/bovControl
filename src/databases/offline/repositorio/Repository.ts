@@ -55,16 +55,35 @@ export async function updateCheckList(checklists: ChecklistDTO[]) {
     }
 }
 
-export async function deleteChecklist(checklist: ChecklistDTO) {
+export async function deleteChecklistOffline(checklist: ChecklistDTO) {
     try {
         const realm = await getRealm();
 
-        const checklistsDelete = realm
-            .objects('CheckList')
-            .filtered('_id = $0', checklist._id);
-
         realm.write(() => {
-            realm.delete(checklistsDelete);
+            const checklistUpdate: any = realm.objectForPrimaryKey(
+                'CheckList',
+                checklist._id,
+            );
+
+            checklistUpdate.it_has_been_deleted = true;
+        });
+    } catch (error: any) {
+        throw new Error(error);
+    }
+}
+
+export async function deleteChecklist(checklists: ChecklistDTO[]) {
+    try {
+        const realm = await getRealm();
+
+        checklists.forEach((checklist: ChecklistDTO) => {
+            const checklistsDelete = realm
+                .objects('CheckList')
+                .filtered('_id = $0', checklist._id);
+
+            realm.write(() => {
+                realm.delete(checklistsDelete);
+            });
         });
     } catch (error: any) {
         throw new Error(error);

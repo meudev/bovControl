@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { deleteChecklist, updateCheckList } from '../../databases/offline/repositorio/Repository';
+import { deleteChecklist, deleteChecklistOffline, updateCheckList } from '../../databases/offline/repositorio/Repository';
 
 import { Body, Container, Content } from './styles';
 
@@ -106,7 +106,7 @@ export default function UpdateCheckList() {
 
     async function deleteCheckList() {
         try {
-            await deleteChecklist(data);
+            await deleteChecklistOffline(data);
             return navigate('Home')
         } catch (error) {
             console.log(error)

@@ -15,4 +15,5 @@ export interface ChecklistDTO {
     created_at: string;
     updated_at: string;
     __v?: number;
+    it_has_been_deleted?: boolean;
 }
