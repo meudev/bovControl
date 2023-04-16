@@ -13,6 +13,9 @@ import Header from '../../components/Header';
 import { ChecklistDTO } from '../../dto/ChecklistDTO';
 import ButtonConfirmation from '../../components/ButtonConfirmation';
 import formatDate from '../../hooks';
+import ButtonWarning from '../../components/ButtonWarning';
+import { Alert } from 'react-native';
+import { deleteChecklistOffline } from '../../databases/offline/repositorio/Repository';
 
 interface PropsRoute {
     data: ChecklistDTO;
@@ -25,6 +28,26 @@ export default function ViewCheckList() {
 
     function handleUpdate() {
         navigate('UpdateCheckList', { data });
+    }
+
+    async function handleDelete() {
+        Alert.alert('Atenção', 'Deseja realmente deletar o checklist?', [
+            {
+                text: 'Não',
+                onPress: () => { },
+                style: 'cancel',
+            },
+            { text: 'Sim', onPress: () => deleteCheckList() },
+        ])
+    }
+
+    async function deleteCheckList() {
+        try {
+            await deleteChecklistOffline(data);
+            return navigate('Home')
+        } catch (error) {
+            return Alert.alert('Atenção', 'Falha ao deletar o checklist.');
+        }
     }
 
     return (
@@ -96,6 +119,10 @@ export default function ViewCheckList() {
                 <ButtonConfirmation
                     text='EDITAR'
                     onPress={handleUpdate}
+                />
+                <ButtonWarning
+                    text='DELETAR'
+                    onPress={handleDelete}
                 />
             </Body>
         </Container>

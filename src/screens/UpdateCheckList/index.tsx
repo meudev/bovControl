@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { deleteChecklist, deleteChecklistOffline, updateCheckList } from '../../databases/offline/repositorio/Repository';
+import { updateCheckList } from '../../databases/offline/repositorio/Repository';
 
 import { Body, Container, Content } from './styles';
 
@@ -11,7 +11,6 @@ import { ChecklistDTO } from '../../dto/ChecklistDTO';
 import Header from '../../components/Header';
 import ButtonConfirmation from '../../components/ButtonConfirmation';
 import Input from '../../components/Input';
-import ButtonWarning from '../../components/ButtonWarning';
 
 interface PropsRoute {
     data: ChecklistDTO;
@@ -93,27 +92,6 @@ export default function UpdateCheckList() {
         return Alert.alert('Atenção', msg);
     }
 
-    async function handleDelete() {
-        Alert.alert('Atenção', 'Deseja realmente deletar o checklist?', [
-            {
-                text: 'Não',
-                onPress: () => { },
-                style: 'cancel',
-            },
-            { text: 'Sim', onPress: () => deleteCheckList() },
-        ])
-    }
-
-    async function deleteCheckList() {
-        try {
-            await deleteChecklistOffline(data);
-            return navigate('Home')
-        } catch (error) {
-            console.log(error)
-            return Alert.alert('Atenção', 'Falha ao deletar o checklist.');
-        }
-    }
-
     return (
         <Container>
             <Header
@@ -156,10 +134,6 @@ export default function UpdateCheckList() {
                 <ButtonConfirmation
                     text='SALVAR'
                     onPress={handleUpdate}
-                />
-                <ButtonWarning
-                    text='DELETAR'
-                    onPress={handleDelete}
                 />
             </Body>
         </Container>
